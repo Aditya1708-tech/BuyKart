@@ -1,0 +1,10 @@
+{
+  "description": "A modern, interactive e-commerce platform offering seamless browsing, shopping, and order management with responsive design for all devices.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
