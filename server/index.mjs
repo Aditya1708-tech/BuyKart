@@ -2,9 +2,10 @@ import { createServer } from "node:http";
 import { randomUUID, scryptSync, timingSafeEqual } from "node:crypto";
 import { MongoClient } from "mongodb";
 
-const port = Number(process.env.API_PORT || 8787);
+const port = Number(process.env.PORT || process.env.API_PORT || 8787);
 const mongoUri = process.env.MONGODB_URI;
 const databaseName = process.env.MONGODB_DB_NAME || "buykart";
+const clientUrl = process.env.CLIENT_URL;
 const sessions = new Map();
 
 const seedProducts = [
@@ -18,8 +19,45 @@ const seedProducts = [
 let client;
 let database;
 
-function json(res, status, body) {
-  res.writeHead(status, { "Content-Type": "application/json; charset=utf-8", "Access-Control-Allow-Origin": "*" });
+function getAllowedOrigin(origin) {
+  if (!origin) return clientUrl || "*";
+
+  if (clientUrl) {
+    const allowedList = clientUrl.split(",").map((s) => s.trim().replace(/\/+$/, ""));
+    const normalizedOrigin = origin.replace(/\/+$/, "");
+    if (allowedList.includes("*") || allowedList.includes(normalizedOrigin)) {
+      return origin;
+    }
+  }
+
+  const isLocalOrigin = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
+  if (isLocalOrigin) {
+    return origin;
+  }
+
+  if (!clientUrl) {
+    return origin || "*";
+  }
+
+  return clientUrl.split(",")[0].trim();
+}
+
+function getCorsHeaders(origin) {
+  const allowed = getAllowedOrigin(origin);
+  return {
+    "Access-Control-Allow-Origin": allowed,
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+    "Vary": "Origin",
+  };
+}
+
+function json(res, status, body, req) {
+  const origin = req?.headers?.origin || res?.req?.headers?.origin;
+  res.writeHead(status, {
+    "Content-Type": "application/json; charset=utf-8",
+    ...getCorsHeaders(origin),
+  });
   res.end(JSON.stringify(body));
 }
 
@@ -75,7 +113,7 @@ async function initializeDatabase() {
 
 const server = createServer(async (req, res) => {
   if (req.method === "OPTIONS") {
-    res.writeHead(204, { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "Content-Type, Authorization", "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS" });
+    res.writeHead(204, getCorsHeaders(req.headers.origin));
     return res.end();
   }
 
@@ -87,7 +125,16 @@ const server = createServer(async (req, res) => {
   const orderCollection = database.collection("orders");
 
   try {
-    if (req.method === "GET" && path === "/api/health") return json(res, 200, { ok: true, service: "buykart-api", database: databaseName });
+    if (req.method === "GET" && path === "/api/health") {
+      return json(res, 200, {
+        ok: true,
+        status: "healthy",
+        service: "buykart-api",
+        database: databaseName,
+        uptime: process.uptime(),
+        timestamp: new Date().toISOString(),
+      }, req);
+    }
 
     if (req.method === "GET" && path === "/api/products") {
       const query = (url.searchParams.get("q") || "").trim();
