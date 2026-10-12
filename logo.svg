@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 240" role="img" aria-labelledby="title">
+  <title id="title">BuyKart - Smart Shopping, Better Living</title>
+  <rect width="620" height="240" fill="#fff" />
+  <g fill="none" stroke="#1647a0" stroke-linecap="round" stroke-linejoin="round" stroke-width="13">
+    <path d="M31 39h26l27 100c3 11 11 17 23 17h69" />
+    <path d="M83 70h96l-14 57h-66z" fill="#f5b900" stroke="#f5b900" />
+    <path d="M105 91c0 14 10 24 25 24s25-10 25-24" stroke="#fff" stroke-width="6" />
+    <circle cx="105" cy="177" r="13" fill="#1647a0" stroke="none" />
+    <circle cx="166" cy="177" r="13" fill="#1647a0" stroke="none" />
+  </g>
+  <text x="190" y="119" fill="#1647a0" font-family="Arial, sans-serif" font-size="94" font-style="italic" font-weight="700">Buy</text>
+  <text x="390" y="119" fill="#ef7a00" font-family="Arial, sans-serif" font-size="94" font-style="italic" font-weight="700">kart</text>
+  <path d="M190 171h22m296 0h22" stroke="#68758d" stroke-width="2" />
+  <text x="220" y="180" fill="#252525" font-family="Arial, sans-serif" font-size="24">Smart Shopping, Better Living</text>
+</svg>

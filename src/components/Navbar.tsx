@@ -5,7 +5,7 @@ import LoginModal from "./LoginModal";
 import { categories } from "../data/products";
 import { searchProducts } from "../data/products";
 import type { Product } from "../types";
-import logo from "../../logo.jpeg";
+import logo from "../../logo.svg";
 
 export default function Navbar() {
   const { state, dispatch, cartCount, showToast } = useApp();
