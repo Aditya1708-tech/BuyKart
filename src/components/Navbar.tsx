@@ -5,6 +5,7 @@ import LoginModal from "./LoginModal";
 import { categories } from "../data/products";
 import { searchProducts } from "../data/products";
 import type { Product } from "../types";
+import logo from "../../logo.jpeg";
 
 export default function Navbar() {
   const { state, dispatch, cartCount, showToast } = useApp();
@@ -51,15 +52,8 @@ export default function Navbar() {
         <div className="max-w-350 mx-auto px-4">
           <div className="flex items-center gap-3 py-2.5">
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-1.5 shrink-0">
-              <div className="bg-bk-yellow rounded-lg w-8 h-8 flex items-center justify-center">
-                <span className="text-bk-blue font-black text-sm font-['Nunito']">BK</span>
-              </div>
-              <div className="hidden sm:block">
-                <span className="text-white font-black text-xl font-['Nunito'] tracking-tight">Buy</span>
-                <span className="text-bk-yellow font-black text-xl font-['Nunito'] tracking-tight">Kart</span>
-                <div className="text-[10px] text-blue-200 leading-none italic -mt-0.5">India ka Apna Store</div>
-              </div>
+            <Link to="/" className="flex items-center shrink-0">
+              <img src={logo} alt="BuyKart" className="h-11 w-auto rounded-md" />
             </Link>
 
             {/* Location */}
